@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { ClientesService } from '../services/clientes.service';
 
 @Component({
   selector: 'app-cadastro-clientes',
@@ -20,7 +19,7 @@ export class CadastroClientesComponent implements OnInit {
 
   // declarando uma variavel chamada httpClient por meio de
   // injeção de dependência (variavel será inicializada automaticamente)
-  constructor(private httpClient: HttpClient) { }
+  constructor(private clientesService: ClientesService) { }
 
   ngOnInit(): void {
   }
@@ -34,8 +33,7 @@ export class CadastroClientesComponent implements OnInit {
     let request = formCadastro.form.value;
 
     // enviando uma requisição HTTP POST para uma API..
-    this.httpClient.post(environment.apiUrl + '/api/clientes', request)
-
+    this.clientesService.create(request)
       .subscribe( // capturando o PROMISSE da API (resposta )
         (data: any) => { // sucesso!
 
@@ -77,3 +75,5 @@ export class CadastroClientesComponent implements OnInit {
   }
 
 }
+
+
