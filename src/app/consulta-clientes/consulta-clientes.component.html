@@ -1,3 +1,10 @@
+<div *ngIf="mensagem_exclusao" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Sucesso!</strong> {{mensagem_exclusao}}
+    <button type="button" class="close" aria-label="Close" (click)="limparMensagens()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <div class="card shadow mb-4 mt-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">
@@ -85,23 +92,33 @@
             </div>
             <div class="modal-body">
 
-                <form #formEdicao="ngForm">
+                <div *ngIf="mensagem_edicao" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Sucesso!</strong> {{mensagem_edicao}}
+                    <button type="button" class="close" aria-label="Close" (click)="limparMensagens()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form #formEdicao="ngForm" (submit)="atualizarCliente(formEdicao)">
 
                     <input type="hidden" name="idCliente" [(ngModel)]="cliente.idCliente" />
 
                     <div class="form-group">
                         <label>Nome do Cliente:</label>
                         <input type="text" class="form-control" name="nome" [(ngModel)]="cliente.nome" />
+                        <div *ngFor="let item of errors.Nome" class="text-danger">
+                            <small><i class="fa fa-exclamation-circle"></i> {{item}}</small>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label>Email:</label>
-                        <input type="text" class="form-control" name="email" [(ngModel)]="cliente.email" />
+                        <input type="text" readonly class="form-control" name="email" [(ngModel)]="cliente.email" />
                     </div>
 
                     <div class="form-group">
                         <label>CPF:</label>
-                        <input type="text" class="form-control" name="cpf" [(ngModel)]="cliente.cpf"
+                        <input type="text" readonly class="form-control" name="cpf" [(ngModel)]="cliente.cpf"
                             mask="000.000.000-00" />
                     </div>
 
@@ -145,9 +162,13 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">
-                    Confirmar Exclusão</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                    (click)="excluirCliente(cliente.idCliente)">
+                    Confirmar Exclusão
+                </button>
             </div>
 
         </div>
@@ -155,3 +176,5 @@
     </div>
 
 </div>
+
+

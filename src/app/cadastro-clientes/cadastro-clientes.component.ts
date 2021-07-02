@@ -30,7 +30,7 @@ export class CadastroClientesComponent implements OnInit {
     this.limparMensagens();
 
     // capturando os campos do formulário
-    let request = formCadastro.form.value;
+    const request = formCadastro.form.value;
 
     // enviando uma requisição HTTP POST para uma API..
     this.clientesService.create(request)

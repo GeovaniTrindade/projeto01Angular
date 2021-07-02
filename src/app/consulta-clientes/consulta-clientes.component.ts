@@ -18,10 +18,17 @@ export class ConsultaClientesComponent implements OnInit {
   // atributo para armazenar o filtro de pesquisa
   filtro: string;
 
-  //atributo para armazenar os dados do cliente
+  // mensagens
+  mensagem_exclusao: string;
+  mensagem_edicao: string;
+
+  // atributo para armazenar os dados do cliente
   cliente = {
-    idCliente: 0, nome: '', email: '', cpf: ''
-  }
+    idCliente : 0, nome: '', email : '', cpf : ''
+  };
+
+  // erros de validação no formulário de edição de cliente
+  errors = { Nome : [] };
 
   // inicializando o ClientesService por meio de injeção de dependência
   constructor(private clientesService: ClientesService) { }
@@ -48,6 +55,8 @@ export class ConsultaClientesComponent implements OnInit {
 
   obterCliente(idCliente): void {
 
+    this.limparMensagens();
+
     this.clientesService.getById(idCliente)
       .subscribe(
         (data: any) => {
@@ -59,9 +68,57 @@ export class ConsultaClientesComponent implements OnInit {
       );
   }
 
+  excluirCliente(idCliente): void {
+
+    this.clientesService.delete(idCliente)
+      .subscribe(
+        (data: any) => {
+          this.mensagem_exclusao = data.mensagemSucesso;
+          this.consultarClientes();
+        },
+        e => {
+          console.log(e);
+        }
+      );
+  }
+
+  atualizarCliente(formEdicao): void {
+
+    this.limparMensagens();
+
+    const request = formEdicao.form.value;
+
+    this.clientesService.update(request)
+      .subscribe(
+        (data: any) => {
+          this.mensagem_edicao = data.mensagemSucesso;
+          this.consultarClientes();
+        },
+        e => {
+          switch (e.status){
+            case 400: // BAD REQUEST
+              this.errors = e.error.errors;
+              break;
+            default:
+              console.log(e);
+          }
+        }
+      );
+  }
+
+  // função para limpar as mensagens
+  limparMensagens(): void {
+    this.mensagem_exclusao = '';
+    this.mensagem_edicao = '';
+    this.errors.Nome = [];
+  }
+
   // função para realizar a paginação no
   // componente ngx-pagination
   handlePageChange(event): void {
     this.page = event;
   }
 }
+
+
+
